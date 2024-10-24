@@ -1,15 +1,16 @@
 import scala.annotation.tailrec
-object Main {
-  def main(args: Array[String]): Unit = {
-    ReverseString
-    // PalindromCheck
-    PrimeNr
-    Bit
-    Fibbo
-    Sorting
-  }
+
+def main(args: Array[String]): Unit = {
+  ReverseString
+  // PalindromCheck
+  PrimeNr
+  Bit
+  Fibbo
+  Sorting
+  Pred
 }
 
+//zadanie 1
 object ReverseString {
 
   def reverse(str: String): String = {
@@ -20,10 +21,10 @@ object ReverseString {
     }
     helper(str, "")
   }
-  println(reverse("czesc"))
+  println(reverse("czescc"))
 
 }
-//zad2
+//zadanie 2
 object PrimeNr {
   def isPrime(num: Int): Boolean = {
     @tailrec
@@ -60,7 +61,7 @@ object Bit {
   }
   println(binToDec(110011))
 }
-//zad4
+//Zadanie 4.
 object Fibbo {
   def value(n: Int): Int = {
     @tailrec
@@ -73,18 +74,35 @@ object Fibbo {
   }
   println(value(5))
 }
-//zadanie 5
+//Zadanie 5.
 object Sorting {
   def isOrdered(tab: Array[Int], mlr: (Int, Int) => Boolean): Boolean = {
     @tailrec
-    def helper(index: Int): Boolean = {
-      if (index >= tab.length - 1) true 
-      else if (!mlr(tab(index), tab(index + 1))) false 
-      else helper(index + 1)
+    def helper(i: Int): Boolean = {
+      if (i >= tab.length - 1) true
+      else if (!mlr(tab(i), tab(i + 1))) false
+      else helper(i + 1)
     }
     if (tab.isEmpty || tab.length == 1) true
     else helper(0)
   }
+  println(isOrdered(Array(1, 3, 3, 6, 8), (_ >= _)))
+}
+//Zadanie 6.
+object Pred {
+  def worth(tab1: Array[Int], tab2: Array[Int])
+           (pred: (Int, Int) => Boolean ) 
+           (op: (Int, Int) => Int): Option[Int] = {
 
-  println(isOrdered(Array(1, 3, 3, 6, 8), (_>=_)))
+    @tailrec
+    def helper(i: Int): Option[Int] = {
+      if (i >= tab1.length || i >= tab2.length) None
+      else if (pred(tab1(i), tab2(i))) Some(op(tab1(i), tab2(i)))
+      else helper(i + 1)
+    }
+
+    helper(0)
+  }
+  println(worth(Array(-1, 3, 2, -8, 5), Array(-3, 3, 3, 0, -4, 5))(_<_)(_+_))
+  println(worth(Array(4, -5, 7, 12, -3), Array(3, 0, 8, 11, 4))(_>_)(_*_))
 }
