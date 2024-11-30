@@ -8945,3 +8945,4 @@ Exception in thread "pool-2770-thread-1" java.lang.InterruptedException
 2024.11.22 15:43:09 INFO  Shutting down server
 2024.11.22 15:43:09 INFO  shutting down Metals
 2024.11.22 15:43:10 INFO  Exiting server
+2024.11.30 18:51:55 INFO  Started: Metals version 1.4.1 in folders 'C:\Users\szymer\Desktop\aa\UG_ZaawansowaneJezykiProgramowania' for client Visual Studio Code 1.95.3.

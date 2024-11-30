@@ -1,7 +1,7 @@
 import scala.annotation.tailrec
 
 def main(args: Array[String]): Unit = {
-  ReverseString
+  ReverseString1
   // PalindromCheck
   PrimeNr
   Bit
@@ -11,9 +11,9 @@ def main(args: Array[String]): Unit = {
 }
 
 //zadanie 1
-object ReverseString {
+object ReverseString1 {
 
-  def reverse(str: String): String = {
+  def reverse1(str: String): String = {
     @tailrec
     def helper(str: String, acc: String): String = {
       if (str == "") acc
@@ -21,7 +21,7 @@ object ReverseString {
     }
     helper(str, "")
   }
-  println(reverse("czescc"))
+  println(reverse1("czescc"))
 
 }
 //zadanie 2

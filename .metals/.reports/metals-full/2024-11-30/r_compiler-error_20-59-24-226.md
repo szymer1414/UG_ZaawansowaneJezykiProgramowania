@@ -1,3 +1,16 @@
+file:///C:/Users/szymer/Desktop/aa/UG_ZaawansowaneJezykiProgramowania/25.10.2024/src/main/scala/zad1.scala
+### scala.MatchError: TypeDef(B,TypeBoundsTree(EmptyTree,EmptyTree,EmptyTree)) (of class dotty.tools.dotc.ast.Trees$TypeDef)
+
+occurred in the presentation compiler.
+
+presentation compiler configuration:
+
+
+action parameters:
+offset: 3878
+uri: file:///C:/Users/szymer/Desktop/aa/UG_ZaawansowaneJezykiProgramowania/25.10.2024/src/main/scala/zad1.scala
+text:
+```scala
 import scala.annotation.tailrec
 
 def main(args: Array[String]): Unit = {
@@ -5,8 +18,6 @@ def main(args: Array[String]): Unit = {
   Merging
   zad3
   zad4
-  zad5
-
 }
 
 //zadanie 1
@@ -90,7 +101,7 @@ object zad3 {
   }
   println(
     compress(List('a', 'a', 'b', 'c', 'c', 'c', 'd', 'd', 'c'))
-  )
+  ) 
 }
 
 //zadanie 4
@@ -103,7 +114,7 @@ object zad4 {
           true
         case (lH :: lT, _) =>
           val updatedSet = a - lH
-
+          print(lT)
           helper(lT, updatedSet)
         case _ =>
           false
@@ -113,49 +124,51 @@ object zad4 {
   }
   val l = List('b', 'o', 'c', 'i', 'a', 'n')
   val lSub = List('a', 'b', 'c')
-  println(isSub(l, lSub))
+  println(isSub(l, lSub)) 
 }
+
 
 //zadanie 5
 object zad5 {
-  def compute[A, B](
-      l: List[Option[A]]
-  )(op1: A => B)(op2: (A, B) => B): Option[B] = {
+  def compute[A, B](l: List[Option[A]])(op1: A => B)(op2: (A, B) => B): Option[B] = {
     @tailrec
-    def helper(l: List[Option[A]], acc: Option[B]): Option[B] = l match {
-      case Some(value) :: lT =>
-        val updatedAcc = acc match {
-          case None           => Some(op1(value))
-          case Some(accValue) => Some(op2(value, accValue))
-        }
-        helper(lT, updatedAcc)
-      case None :: lT =>
-        helper(lT, acc)
-      case _ =>
-        acc
-    }
-    helper(l, None)
+  def helper(l: List[Option[A]], acc: Option[B]): Option[B] = l match {
+    case Some(value) :: lT =>
+   val updatedAcc = acc match {
+        case None => Some(op1(value))
+        case Some(accValue) => Some(op2(value, accValue))
+      }
+      helper(lT, updatedAcc)
+    case None :: lT =>
+      helper(lT, acc)
+    
+    case _ =>
+      acc
+}
+  helper(l, None)
   }
 
   // Dla: l = List(Some(1), None, Some(2), None, Some(3), Some(4)), op1 = (_ + 0), op2 = (_ + _), funkcja powinna zwrócić: Some(10).
   val l = List(Some(1), None, Some(2), None, Some(3), Some(4))
-  val op1: Int => Int = _ + 0
-  val op2: (Int, Int) => Int = _ + _
-  println(compute(l)(op1)(op2))
+  val op1 = (_ + 0), 
+  v@@
+  println(isSub(l, op1))
 }
-//zadanie 6
-/*
-object zad6 {
-def compose[A, B, C](f: A => B)(g: B => C): A => C ={
-
-}
-def prod[A, B, C, D](f: A => C, g: B => D): (A, B) => (C, D) = {
-
-}
-def lift[A, B, T](op: (T,T) => T)(f: A => T, g: B => T): (A,B) => T ={
-  
-}
+```
 
 
-  println(compute(l)(op1)(op2))
-}*/
+
+#### Error stacktrace:
+
+```
+dotty.tools.pc.completions.KeywordsCompletions$.checkTemplateForNewParents$$anonfun$2(KeywordsCompletions.scala:218)
+	scala.Option.map(Option.scala:242)
+	dotty.tools.pc.completions.KeywordsCompletions$.checkTemplateForNewParents(KeywordsCompletions.scala:215)
+	dotty.tools.pc.completions.KeywordsCompletions$.contribute(KeywordsCompletions.scala:44)
+	dotty.tools.pc.completions.Completions.completions(Completions.scala:124)
+	dotty.tools.pc.completions.CompletionProvider.completions(CompletionProvider.scala:90)
+	dotty.tools.pc.ScalaPresentationCompiler.complete$$anonfun$1(ScalaPresentationCompiler.scala:146)
+```
+#### Short summary: 
+
+scala.MatchError: TypeDef(B,TypeBoundsTree(EmptyTree,EmptyTree,EmptyTree)) (of class dotty.tools.dotc.ast.Trees$TypeDef)

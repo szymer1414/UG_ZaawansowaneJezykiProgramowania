@@ -45,5 +45,18 @@ def zad4: Unit = {
     case _ => throw new IllegalArgumentException
    }
  })
- println(wyniki.head)
+
+import scala.math.abs
+  val województwoMaxGlosów = województwa
+    .map(woj => {
+      val wynikDlaWojewództwa = wyniki.filter(w => w.ID >= woj.min && w.ID < woj.min + 19999)
+      val sumKO = wynikDlaWojewództwa.map(_.KOALICJA_OBYWATELSKA).sum
+      val sumPIS = wynikDlaWojewództwa.map(_.PIS).sum
+      
+      val amplituda = abs(sumKO - sumPIS)
+      (woj.nazwa, amplituda)
+    })
+    .minBy(_._2)
+  println(s"woj: ${województwoMaxGlosów._1}")
+  println(s"Liczba : ${województwoMaxGlosów._2}")
 }

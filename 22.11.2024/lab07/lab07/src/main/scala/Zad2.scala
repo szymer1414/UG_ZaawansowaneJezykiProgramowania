@@ -1,8 +1,6 @@
 @main
 def zad2: Unit = {
 
-
-
   def countChars(str: String): Int = {
     val uniqueChars = for {
       (char, occurrences) <- str.groupBy(
