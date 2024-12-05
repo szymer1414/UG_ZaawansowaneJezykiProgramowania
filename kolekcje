@@ -1,0 +1,168 @@
+/////////////////////////////////////
+LIST
+/////////////////////////////////////
+
+val squares = nums.map(x => x * x) // List(1, 4, 9
+val chars = words.flatMap(_.toUpperCase) // List(H, E, L, L, O, W, O, R, L, D)
+
+val nums = List(1, 2, 3, 4)
+val evenNums = nums.collect { case x if x % 2 == 0 => x * 10 } // List(20, 40)
+
+val nums = List(1, 2, 3, 4)
+val evens = nums.filter(_ % 2 == 0) // List(2, 4)
+
+val nums = List(1, 2, 3, 4)
+val odds = nums.filterNot(_ % 2 == 0) // List(1, 3)
+
+val nums = List(1, 2, 3, 4)
+val (evens, odds) = nums.partition(_ % 2 == 0) // (List(2, 4), List(1, 3))
+
+val nums = List(1, 2, 3, 4)
+val firstTwo = nums.take(2) // List(1, 2)
+
+val nums = List(1, 2, 3, 4)
+val rest = nums.drop(2) // List(3, 4)
+
+val nums = List(1, 2, 3)
+val sum = nums.foldLeft(0)(_ + _) // 6 1+2+3
+val nums = List(1, 2, 3)
+val sum = nums.foldRight(0)(_ + _) // 6 3+2+1
+
+val nums = List(1, 2, 3)
+val hasEven = nums.exists(_ % 2 == 0) // true
+
+val nums = List(2, 4, 6)
+val allEven = nums.forall(_ % 2 == 0) // true
+
+val nums = List(1, 2, 3)
+val firstEven = nums.find(_ % 2 == 0) // Some(2)
+
+val nums = List(3, 1, 2)
+val sortedNums = nums.sorted // List(1, 2, 3)
+
+val nums = List("apple", "banana", "kiwi")
+val sorted = nums.sortBy(_.length) // List("kiwi", "apple", "banana")
+
+/////////////////////////////////////
+Seq
+/////////////////////////////////////
+
+val seq = Seq(1, 2, 3)
+println(seq(1)) // Output: 2
+
+val seq = Seq(1, 2, 3)
+println(seq.head) // Output: 1
+
+val seq = Seq(1, 2, 3)
+println(seq.tail) // Output: Seq(2, 3)
+
+val seq = Seq(1, 2, 3)
+println(seq.last) // Output: 3
+
+val seq = Seq(1, 2, 3)
+val squared = seq.map(x => x * x) // Output: Seq(1, 4, 9)
+
+val seq = Seq(1, 2, 3)
+val expanded = seq.flatMap(x => Seq(x, x * 2)) // Output: Seq(1, 2, 2, 4, 3, 6)
+
+val seq = Seq(1, 2, 3)
+val evenSquares = seq.collect { case x if x % 2 == 0 => x * x } // Output: Seq(4)
+
+val seq = Seq(1, 2, 3)
+val contains = seq.contains(2) // Output: true
+
+/////////////////////////////////////
+Set - unique values
+/////////////////////////////////////
+
+val set = Set(1, 2, 3)
+val newSet = set - 2 // Output: Set(1, 3)
+val set = Set(1, 2)
+val newSet = set + 3 // Output: Set(1, 2, 3)
+
+val set1 = Set(1, 2, 3)
+val set2 = Set(3, 4, 5)
+val unionSet = set1.union(set2) // Output: Set(1, 2, 3, 4, 5)
+
+val set1 = Set(1, 2, 3)
+val set2 = Set(2, 3, 4)
+val intersectionSet = set1.intersect(set2) // Output: Set(2, 3)
+
+val set1 = Set(1, 2, 3)
+val set2 = Set(2, 3, 4)
+val diffSet = set1.diff(set2) // Output: Set(1)
+
+val set1 = Set(1, 2)
+val set2 = Set(1, 2, 3)
+println(set1.subsetOf(set2)) // Output: true
+
+/////////////////////////////////////
+Map - kazda wartosc ma klucz
+/////////////////////////////////////
+
+val map = Map("a" -> 1, "b" -> 2)
+println(map("a")) // Output: 1
+
+val map = Map("a" -> 1, "b" -> 2)
+println(map.get("a")) // Output: Some(1)
+println(map.get("c")) // Output: None
+
+val map = Map("a" -> 1, "b" -> 2)
+println(map.keys) // Output: Set(a, b)
+
+val map = Map("a" -> 1, "b" -> 2)
+println(map.values) // Output: Iterable(1, 2)
+
+val map = Map("a" -> 1, "b" -> 2)
+println(map + ("c" -> 3)) // Output: Map(a -> 1, b -> 2, c -> 3)
+
+/////////////////////////////////////
+StringOps
+/////////////////////////////////////
+
+val str = "Hello"
+println(str.length) // Output: 5
+val str = "Hello"
+println(str.charAt(1)) // Output: 'e'
+val str = "Hello"
+println(str.substring(1, 4)) // Output: "ell"
+val str = "Hello"
+println(str.reverse) // Output: "olleH"
+val str = "Hello"
+println(str.toLowerCase) // Output: "hello"
+val str = "   Hello   "
+println(str.trim) // Output: "Hello"
+val str = "Hello"
+println(str.startsWith("He")) // Output: true
+val str = "Hello"
+println(str.contains("ell")) // Output: true
+println(str.contains("abc")) // Output: false
+val str = "Hello"
+println(str.endsWith("lo")) // Output: true
+val str = "Hello"
+println(str.indexOf('e')) // Output: 1
+println(str.indexOf('z')) // Output: -1
+
+val str = "Hello,World,Scala"
+val arr = str.split(",")
+arr.foreach(println) // Output: Hello World Scala
+val arr = Array("Hello", "World", "Scala")
+println(arr.mkString(", ")) // Output: "Hello, World, Scala"
+
+val str = "Hello"
+println(str.replace("e", "a")) // Output: "Hallo"
+val str = "Hello 123"
+println(str.replaceAll("[0-9]", "#")) // Output: "Hello ###"
+val str = "Hello"
+println(str.padTo(10, '*')) // Output: "Hello*****"
+val str = "Hello"
+println(str.stripPrefix("He")) // Output: "llo"
+val str = "Hello"
+println(str.stripSuffix("lo")) // Output: "Hel"
+
+val str1 = "Hello"
+val str2 = "hello"
+println(str1.equalsIgnoreCase(str2)) // Output: true
+
+val str = "Hello"
+println(str.getBytes("UTF-8").mkString(" ")) // Output: 72 101 108 108 111

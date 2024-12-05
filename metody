@@ -1,0 +1,9 @@
+sekwencja.head – zwraca pierwszy znak.
+sekwencja.tail – zwraca wszystkie znaki z wyjątkiem pierwszego.
+sekwencja.length – zwraca liczbę elementów tablicy
+List.empty – wygenerowanie pustej listy.
+lista.isEmpty – sprawdza czy sekwencja jest pusta.
+lista.reverse – zwraca sekwencję w odwrotnej kolejności.
+lista.size – zwraca liczbę elementów w liście.
+lista.mkString – konwersja listy znaków na ciąg znaków.
+lista.mkString("[", ", ", "]") – wypisanie listy w przejrzystej formie.
