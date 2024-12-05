@@ -9,19 +9,14 @@ def main(args: Array[String]): Unit = {
   Grade
   Zadanie2
   Zadanie3
+  Zadanie4
 }
 
 //zadanie 1
 object CntCh {
 
   def countChars(str: String): Int = {
-
-    val uniqueChars = for {
-      (char, occurrences) <- str.groupBy(identity)
-      if occurrences.length == 1 || occurrences.length > 0
-    } yield char
-
-    uniqueChars.size
+    str.toSet.size
   }
 
   println(countChars("aaabasdwbbcca"))
@@ -47,9 +42,7 @@ object Swap {
       if (i + 1 < seq.length)
         Seq(seq(i + 1), seq(i))
       else
-        Seq(
-          seq(i)
-        )
+        Seq(seq(i))
     }
   }.flatten
   val set1 = Seq(1, 2, 3, 4, 5)
@@ -73,6 +66,12 @@ object Strefa {
 }
 //zadanie 5
 object MaterMind {
+  case class Ocena(
+      imie: String,
+      nazwisko: String,
+      ocenaWdzieku: Int,
+      ocenaSprytu: Int
+  )
 
   def score(code: Seq[Int])(move: Seq[Int]): (Int, Int) = {
 
@@ -98,22 +97,53 @@ object MaterMind {
 
 //zadanie 6
 object Grade {
-  case class PersonRating(
+
+  case class Ocena(
       imie: String,
       nazwisko: String,
-      ocenaWdzięku: Int,
+      ocenaWdzieku: Int,
       ocenaSprytu: Int
   )
-
-  val peopleRatings = Seq(
-    PersonRating("Jan", "Kowalski", 8, 7),
-    PersonRating("Anna", "Nowak", 9, 6),
-    PersonRating("Piotr", "Wiśniewski", 7, 8)
+  val oceny = List(
+    Ocena("Jan", "Kowalski", 8, 7),
+    Ocena("Jan", "Kowalski", 2, 7),
+    Ocena("Jan", "Kowalski", 4, 7),
+    Ocena("Anna", "Nowak", 9, 6),
+    Ocena("Anna", "Nowak", 9, 3),
+    Ocena("Piotr", "Wiśniewski", 7, 8),
+    Ocena("Adam", "Kowalski", 9, 8),
+    Ocena("Jan", "Wiśniewski", 10, 7)
   )
 
-// Accessing elements
-  println(peopleRatings(0).imie) // Outputs: Jan
-  println(peopleRatings(1).ocenaSprytu) // Outputs: 6
+  def obliczRanking(oceny: List[Ocena]): List[(Int, String, Double)] = {
+
+    val grupy = oceny.groupBy(o => (o.imie, o.nazwisko))
+
+    val wyniki = grupy.map { case ((imie, nazwisko), ocenyZawodnika) =>
+      val sredniaWdzieku =
+        ocenyZawodnika.map(_.ocenaWdzieku).sum.toDouble / ocenyZawodnika.size
+      val sredniaSprytu =
+        ocenyZawodnika.map(_.ocenaSprytu).sum.toDouble / ocenyZawodnika.size
+      val suma = sredniaWdzieku + sredniaSprytu
+      ((imie, nazwisko), suma, sredniaWdzieku, sredniaSprytu)
+    }.toList
+
+    val posortowane = wyniki.sortBy {
+      case ((_, nazwisko), suma, sredniaWdzieku, _) =>
+        (-suma, -sredniaWdzieku, nazwisko)
+    }
+    posortowane.zipWithIndex.map {
+      case (((imie, nazwisko), suma, _, _), index) =>
+        (index + 1, s"$imie $nazwisko", suma)
+    }
+  }
+
+  val ranking = obliczRanking(oceny)
+
+  println("Ranking zawodników:")
+  ranking.foreach { case (miejsce, zawodnik, wynik) =>
+    println(s"$miejsce. $zawodnik - Wynik: $wynik")
+  }
 }
 
 object Zadanie2 {
@@ -149,34 +179,73 @@ object Zadanie2 {
 }
 
 object Zadanie3 {
-case class Lokata(n: Int, słowo: String, p: Double)
+  case class Lokata(n: Int, słowo: String, p: Double)
 
-def oczyść(lista: List[Lokata], wzorzec: String, filtr: List[Int]): List[Lokata] = {
-  require(wzorzec.length == 5)
-  require(filtr.length == 5 && filtr.forall(el => el == 0 || el == 1 || el == 2))
+  def oczyść(
+      lista: List[Lokata],
+      wzorzec: String,
+      filtr: List[Int]
+  ): List[Lokata] = {
+    require(wzorzec.length == 5)
+    require(
+      filtr.length == 5 && filtr.forall(el => el == 0 || el == 1 || el == 2)
+    )
 
-  lista.filter { lokata =>  val słowo = lokata.słowo
-    (0 until 5).forall { i => val charWzorzec = wzorzec(i)
-      filtr(i) match {
-        case 0 => !słowo.contains(wzorzec)
-        case 1 => !(i < słowo.length && słowo(i) == charWzorzec)
-        case 2 => !(i >= słowo.length || słowo(i) == charWzorzec)
+    lista.filter { lokata =>
+      val słowo = lokata.słowo
+      (0 until 5).forall { i =>
+        val charWzorzec = wzorzec(i)
+        filtr(i) match {
+          case 0 => !słowo.contains(wzorzec)
+          case 1 => !(i < słowo.length && słowo(i) == charWzorzec)
+          case 2 => !(i >= słowo.length || słowo(i) == charWzorzec)
+        }
       }
     }
   }
-}
 // Example Usage
-val lista = List(
-  Lokata(1, "abcde", 1.0),
-  Lokata(2, "abxde", 2.0),
-  Lokata(3, "xyzd3", 3.0),
-  Lokata(4, "axxxe", 4.0),
-  Lokata(5, "xxaxx", 5.0)
-)
+  val lista = List(
+    Lokata(1, "abcde", 1.0),
+    Lokata(2, "abxde", 2.0),
+    Lokata(3, "xyzd3", 3.0),
+    Lokata(4, "axxxe", 4.0),
+    Lokata(5, "xxaxx", 5.0)
+  )
 
-val wzorzec = "abcse"
-val filtr = List(0, 1, 2, 0, 2)
-val wynik = oczyść(lista, wzorzec, filtr)
-println(s"Final result: $wynik")
+  val wzorzec = "abcse"
+  val filtr = List(0, 1, 2, 0, 2)
+  val wynik = oczyść(lista, wzorzec, filtr)
+  println(s"Final result: $wynik")
 
 }
+
+object Zadanie4 {
+  def ranking(): List[(Int, Int)] = {
+    val lines = Source.fromResource("test.txt").getLines().toList
+    val answers =
+      lines.tail.map(line => line.split(" ").tail.map(_.toInt).toList)
+    val transposed = answers.transpose
+
+    val correctAnswersCount =
+      transposed.map(questionAnswers => questionAnswers.count(_ == 1))
+    val numParticipants = answers.size
+
+    // Filter out questions where less than 50% answered correctly
+    val validQuestions = correctAnswersCount.zipWithIndex.filter {
+      case (correctCount, _) => correctCount > numParticipants / 2
+    }
+    val questionRankings = validQuestions.map { case (correctCount, index) =>
+      (correctCount, index + 1)
+    }
+    val sortedRanking = questionRankings.sortBy {
+      case (correctCount, questionNumber) => (-correctCount, questionNumber)
+    }
+
+    sortedRanking.zipWithIndex.map { case ((_, questionNumber), index) =>
+      (index + 1, questionNumber)
+    }
+  }
+  val result = ranking()
+  println(result.mkString(", "))
+}
+

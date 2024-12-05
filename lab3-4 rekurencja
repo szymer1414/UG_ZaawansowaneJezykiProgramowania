@@ -334,3 +334,39 @@ object zad7 {
 
     println(group(l)(f)(op)(op2)) // Output: Set((0, 20), (1, 25))
 }
+object Zadanie5 {
+  def group[A](list: List[A])(len: Int, shift: Int = 1): List[List[A]] = {
+    @tailrec
+    def helper(list: List[A], acc: List[List[A]], count: Int): List[List[A]] = {
+      if (list.isEmpty) acc.reverse
+      else {
+        val (group, remaining) = extractGroup(list, len, count)
+        helper(remaining, group :: acc, count + shift)
+      }
+    }
+
+    def extractGroup(list: List[A], len: Int,count: Int): (List[A], List[A]) = {
+      @tailrec
+      def extractRec(remaining: List[A],group: List[A],currentCount: Int
+       ): (List[A], List[A]) = {
+        if (currentCount == len || remaining.isEmpty) {
+          (group.reverse, remaining)
+        } else {
+          remaining match {
+            case lH :: lT => extractRec(lT, lH :: group, currentCount + 1)
+            case Nil      => (group.reverse, Nil)
+          }
+        }
+      }
+
+      extractRec(list, Nil, 0)
+    }
+
+    helper(list, Nil, 0)
+  }
+  val (list, len, shift) = (List(1, 2, 3, 4, 5), 3, 1)
+  println(group(list)(len, shift))
+  val (list1, len1, shift1) = (List(1, 2, 3, 4, 5), 2, 2)
+  println(group(list1)(len1, shift1))
+
+}
