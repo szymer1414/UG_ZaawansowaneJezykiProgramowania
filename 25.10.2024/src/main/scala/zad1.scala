@@ -173,50 +173,43 @@ object zad6 {
   println(sum(s1, s2)(2)) // Output: 0
 }
 
+
 object zad7 {
-  def group[A, B, C](
-      l: List[A]
-  )(f: A => B)(op: A => C)(op2: (C, C) => C): Set[(B, C)] = {
+  def group[A, B, C](l: List[A])(f: A => B)(op: A => C)(op2: (C, C) => C
+  ): Set[(B, C)] = {
 
     @tailrec
-    def helper(
-        remaining: List[A],
-        acc: List[(B, C)] = List()
+    def helper(list: List[A], acc: List[(B, C)] = List()
     ): List[(B, C)] = {
-      remaining match {
-        case Nil => acc // Base case: no more elements to process
+      list match {
+        case Nil => acc
         case head :: tail =>
-          val key = f(head)   // Compute the group key
-          val value = op(head) // Compute the value to aggregate
-
-          // Explicitly iterate over accumulator to update or append groups
+          val key = f(head)   
+          val value = op(head) 
           val updatedAcc = updateAcc(key, value, acc)(op2)
-          helper(tail, updatedAcc) // Process the rest of the list
+          helper(tail, updatedAcc)
       }
     }
 
     @tailrec
-    def updateAcc(
-        key: B,
-        value: C,
-        acc: List[(B, C)]
+    def updateAcc( key: B, value: C, acc: List[(B, C)]
     )(op2: (C, C) => C, updated: List[(B, C)] = List()): List[(B, C)] = {
       acc match {
-        case Nil => (key, value) :: updated.reverse // No matching key found, append new group
+        case Nil => (key, value) :: updated.reverse 
         case (k, v) :: tail if k == key =>
-          (k, op2(v, value)) :: (updated.reverse ++ tail) // Update existing group and rebuild list
+          (k, op2(v, value)) :: (updated.reverse ++ tail) 
         case group :: tail =>
-          updateAcc(key, value, tail)(op2, group :: updated) // Recur with the rest of the list
+          updateAcc(key, value, tail)(op2, group :: updated) 
       }
     }
 
-    helper(l).toSet // Convert the accumulated result to a Set
+    helper(l).toSet 
   }
 
     val l = List(1, 2, 3, 4, 5, 6, 7, 8, 9)
-    val f: Int => Int = (_ % 2) // Group by even (0) or odd (1)
-    val op: Int => Int = (_ + 0) // Identity operation on the number
-    val op2: (Int, Int) => Int = (_ + _) // Sum values
+    val f: Int => Int = (_ % 2) 
+    val op: Int => Int = (_ + 0) 
+    val op2: (Int, Int) => Int = (_ + _) 
 
     println(group(l)(f)(op)(op2)) // Output: Set((0, 20), (1, 25))
 }

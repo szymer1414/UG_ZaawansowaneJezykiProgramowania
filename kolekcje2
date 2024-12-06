@@ -178,5 +178,5 @@ val wzorzec = "abcse"
 val filtr = List(0, 1, 2, 0, 2)
 val wynik = oczyść(lista, wzorzec, filtr)
 println(s"Final result: $wynik")
-
 }
+

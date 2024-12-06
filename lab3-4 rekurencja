@@ -370,3 +370,62 @@ object Zadanie5 {
   println(group(list1)(len1, shift1))
 
 }
+object Task5 {
+  def countDistinct[A](list: List[A]): Int = {
+    @tailrec
+    def helper(list: List[A], acc: Set[A]): Int = {
+      list match {
+        case Nil => acc.size
+        case head :: tail => helper(tail, acc + head)
+      }
+    }
+
+    helper(list, Set())
+  }
+}
+
+object Task4 {
+  def generatePermutations[A](list: List[A]): List[List[A]] = {
+    list match {
+      case Nil => List(Nil)
+      case head :: tail => 
+        generatePermutations(tail).flatMap { perm =>
+          (0 to perm.length).map(i => perm.take(i) ++ (head :: perm.drop(i)))
+        }
+    }
+  }
+}
+object Task6 {
+  def groupByPredicate[A](list: List[A], pred: A => Boolean): (List[A], List[A]) = {
+    @tailrec
+    def helper(list: List[A], accTrue: List[A], accFalse: List[A]): (List[A], List[A]) = list match {
+      case Nil => (accTrue.reverse, accFalse.reverse)
+      case head :: tail if pred(head) => helper(tail, head :: accTrue, accFalse)
+      case head :: tail => helper(tail, accTrue, head :: accFalse)
+    }
+
+    helper(list, Nil, Nil)
+  }
+  val list = List(1, 2, 3, 4, 5)
+groupByPredicate(list, (x: Int) => x % 2 == 0) // Returns: (List(2, 4), List(1, 3, 5))
+}
+object Task7 {
+  def findLongestSubsequence[A](list: List[A])(implicit ev: A <:< Ordered[A]): List[A] = {
+    @tailrec
+    def helper(list: List[A], currentSeq: List[A], maxSeq: List[A]): List[A] = list match {
+      case Nil => maxSeq
+      case head :: Nil =>
+        val newSeq = if (currentSeq.isEmpty || ev(head) > ev(currentSeq.last)) currentSeq :+ head
+                      else currentSeq
+        newSeq
+      case head :: tail =>
+        val newSeq = if (currentSeq.isEmpty || ev(head) > ev(currentSeq.last)) currentSeq :+ head
+                      else currentSeq
+        helper(tail, newSeq, if (newSeq.length > maxSeq.length) newSeq else maxSeq)
+    }
+
+    helper(list, Nil, Nil)
+  }
+  val list = List(1, 2, 1, 3, 4, 5, 0)
+findLongestSubsequence(list) // Returns: List(1, 2, 3, 4, 5)
+}

@@ -1,107 +1,140 @@
 import scala.annotation.tailrec
-
+import scala.io.Source
 def main(args: Array[String]): Unit = {
   zad1
   zad2
   zad3
   zad4
-  zad5
-  zad6
-  zad7
-  zad8
-  zad9
 }
 
 //zadanie 1
 object zad1 {
-  def subSeq[A](seq: Seq[A], begIdx: Int, endIdx: Int): Seq[A] = {
-    seq.drop(begIdx).take(endIdx - begIdx + 1)
+  def Niemalejace(liczba: String): Boolean = {
+    liczba.sliding(2).forall { pair => pair(0) <= pair(1) }
   }
-  val seq = Seq(1, 2, 3, 4, 5, 6, 7)
-  println(subSeq(seq, 2, 5))
+  def Przysta(liczba: String): Boolean = {
+    liczba.map(_.asDigit).sum % 2 != 0
+  }
+  val linie = io.Source.fromResource("liczby.txt").getLines.toList
+  println(linie.filter(liczba => Niemalejace(liczba) && Przysta(liczba)))
 }
-
 //zadanie 2
 object zad2 {
-  def remElems[A](seq: Seq[A], k: Int): Seq[A] = {
-    seq.zipWithIndex.filter { case (_, index) => index != k }.map(_._1)
+  def countChars(str: String): Int = {
+    str.toSet.size
   }
-  val seq = Seq(1, 2, 3, 4, 5, 6, 7)
-  println(remElems(seq, 2)) // Output: Seq(1, 2, 4, 5)
-}
-//zadanie 3
-object zad3 {
-  def diff[A](seq1: Seq[A], seq2: Seq[A]): Seq[A] = {
-    seq1.zip(seq2).collect { case (a, b) if a != b => a } ++ seq1.drop(
-      seq2.length
+
+  val linie = io.Source.fromResource("nazwiska.txt").getLines.toList
+  val imionaNazwiska = linie.map { line => // split in 2
+    val parts = line.split(" ")
+    (
+      parts.headOption.getOrElse(""),
+      parts.lastOption.getOrElse("")
     )
   }
-  val seq1 = Seq(1, 2, 3)
-  val seq2 = Seq(2, 2, 1, 3)
-  println(diff(seq1, seq2)) // Output: Seq(1, 3)
+  val counts = imionaNazwiska.map { case (imie, _) =>
+    (imie, countChars(imie))
+  }
+  val maxCount = counts.map(_._2).max
+  val osobyMaxLiter = imionaNazwiska.filter { case (imie, _) =>
+    countChars(imie) == maxCount
+  }
+  val minNazwiskoLength = osobyMaxLiter.map { case (_, nazwisko) =>
+    nazwisko.length
+  }.min
+  val result = osobyMaxLiter.filter { case (_, nazwisko) =>
+    nazwisko.length == minNazwiskoLength
+  }
+  println(result.map(_._2).mkString(", ")) // Drukowanie nazwisk
 }
+
+//zadanie 3
+object zad3 {
+
+  val linie = io.Source
+    .fromResource("ogniem-i-mieczem.txt")
+    .getLines
+    .toList
+    .mkString(" ")
+
+  def histogram(maks: Int): String = {
+    val litery = linie.filter(c => c.isLetter).map(_.toLower)
+    val frequencyMap =
+      litery.groupBy(identity).view.mapValues(_.length).toMap.toSeq.sortBy(_._1)
+    frequencyMap
+      .take(maks)
+      .map { case (char, count) =>
+        s"$char:${"*" * count}"
+      }
+      .mkString("\n")
+  }
+
+  println(histogram(5))
+
+}
+
 //zadanie 4
 object zad4 {
-  def sumOption(seq: Seq[Option[Double]]): Double = {
-    seq.foldLeft(0.0)((acc, opt) => acc + opt.getOrElse(0.0))
-  }
-  val seq = Seq(Some(5.4), Some(-2.0), Some(1.0), None, Some(2.6))
-  println(sumOption(seq)) // Output: 7.0
-}
-//zadanie 5
-object zad5 {
-  def deStutter[A](seq: Seq[A]): Seq[A] = {
-    seq.foldLeft(Seq.empty[A]) { (acc, elem) =>
-      if (acc.isEmpty || acc.last != elem) acc :+ elem else acc
-    }
-  }
-  val seq = Seq(1, 1, 2, 4, 4, 4, 1, 3)
-  println(deStutter(seq)) // Output: Seq(1, 2, 4, 1, 3)
-}
-//zadanie 6
-object zad6 {
-  def isOrdered[A](seq: Seq[A])(leq: (A, A) => Boolean): Boolean = {
-    seq.sliding(2).forall {
-      case Seq(a, b) => leq(a, b)
-      case _         => true
-    }
-  }
-  val seq1 = Seq(1, 2, 2, 4)
-  println(isOrdered(seq1)(_ < _)) // Output: false
-  println(isOrdered(seq1)(_ <= _)) // Output: true
-}
-//zadanie 7
-object zad7 {
-  def freq[A](seq: Seq[A]): Set[(A, Int)] = {
-    seq
-      .groupBy(identity)
-      .map { case (elem, occurrences) => (elem, occurrences.size) }
-      .toSet
-  }
-  val seq = Seq('a', 'b', 'a', 'c', 'c', 'a')
-  println(freq(seq)) // Output: Set(('a', 3), ('b', 1), ('c', 2))
-}
-//zadanie 8
-object zad8 {
-  def median(seq: Seq[(String, Double)]): Double = {
-    val sortedScores = seq.map(_._2).sorted
-    val n = sortedScores.length
-    if (n % 2 == 0) (sortedScores(n / 2 - 1) + sortedScores(n / 2)) / 2
-    else sortedScores(n / 2)
-  }
-  val seq =
-    Seq(("Alice", 10.0), ("Bob", 20.0), ("Charlie", 30.0), ("David", 40.0))
-  println(median(seq)) // Output: 25.0
-}
-//zadanie 9
-object zad9 {
-  def minMax(seq: Seq[(String, Double)]): Option[(String, String)] = {
-    if (seq.isEmpty) None
-    else Some((seq.minBy(_._2)._1, seq.maxBy(_._2)._1))
-  }
-  val seq =
-    Seq(("Alice", 10.0), ("Bob", 20.0), ("Charlie", 30.0), ("David", 40.0))
-  println(minMax(seq)) // Output: Some(("Alice", "David"))
-}
+  case class Województwo(nazwa: String, min: Int)
+  // max ID gminy z województwa w: w.min + 19999
+  case class Wynik(
+      ID: Int,
+      KOALICJA_OBYWATELSKA: Int,
+      LEWICA_RAZEM: Int,
+      POLEXIT: Int,
+      JEDNOŚĆ_NARODU: Int,
+      PIS: Int,
+      EUROPA_CHRISTI: Int,
+      WIOSNA: Int,
+      KONFEDERACJA: Int,
+      KUKIZ15: Int,
+      POLSKA_FAIR_PLAY: Int
+  )
 
+  val województwa = List(
+    Województwo("dolnośląskie", 20000),
+    Województwo("kujawsko-pomorskie", 40000),
+    Województwo("lubelskie", 60000),
+    Województwo("lubuskie", 80000),
+    Województwo("łódzkie", 100000),
+    Województwo("małopolskie", 120000),
+    Województwo("mazowieckie", 140000),
+    Województwo("opolskie", 160000),
+    Województwo("podkarpackie", 180000),
+    Województwo("podlaskie", 200000),
+    Województwo("pomorskie", 220000),
+    Województwo("śląskie", 240000),
+    Województwo("świętokrzyskie", 260000),
+    Województwo("warmińsko-mazurskie", 280000),
+    Województwo("wielkopolskie", 300000),
+    Województwo("zachodniopomorskie", 320000)
+  )
 
+  val wyniki = io.Source
+    .fromResource("wyniki.csv")
+    .getLines
+    .toList
+    .map(l => {
+      l.split(",").toList.map(_.toInt) match {
+        case List(a, b, c, d, e, f, g, h, i, j, k) =>
+          Wynik(a, b, c, d, e, f, g, h, i, j, k)
+        case _ => throw new IllegalArgumentException
+      }
+    })
+
+  import scala.math.abs
+  val województwoMaxGlosów = województwa
+    .map(woj => {
+      val wynikDlaWojewództwa =
+        wyniki.filter(w => w.ID >= woj.min && w.ID < woj.min + 19999)
+      val sumKO = wynikDlaWojewództwa.map(_.KOALICJA_OBYWATELSKA).sum
+      val sumPIS = wynikDlaWojewództwa.map(_.PIS).sum
+
+      val amplituda = abs(sumKO - sumPIS)
+      (woj.nazwa, amplituda)
+    })
+    .minBy(_._2)
+  println(s"woj: ${województwoMaxGlosów._1}")
+  println(s"Liczba : ${województwoMaxGlosów._2}")
+
+}
